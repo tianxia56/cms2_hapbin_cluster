@@ -34,8 +34,8 @@ def main(sim_id, pop_id, pop1, config_file, max_pop_id, path):
         return
 
     os.makedirs("hapbin", exist_ok=True)
-    output_file_hap = f"hapbin/{sim_id}_0_{pop_id}.hap"
-    output_file_map = f"hapbin/{sim_id}_0_{pop1}.map"
+    output_file_hap = f"hapbin/{path}.{sim_id}_0_{pop_id}.hap"
+    output_file_map = f"hapbin/{path}.{sim_id}_0_{pop1}.map"
     extract_and_clean_columns(input_file, output_file_map, output_file_hap)
     print(f"Extracted columns saved to {output_file_map} and {output_file_hap}")
     create_map_file(output_file_map)

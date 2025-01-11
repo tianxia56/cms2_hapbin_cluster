@@ -30,7 +30,7 @@ generate_map_and_haps() {
     done
     end_time=$(date +%s)
     runtime=$((end_time - start_time))
-    echo "Neut runtime for simulation ID $sim_id, make map and haps: $runtime seconds" >> "hapbin/hapbin.runtime.txt"
+    echo "$path runtime for simulation ID $sim_id, make map and haps: $runtime seconds" >> "hapbin/hapbin.runtime.txt"
 }
 
 # Function to run xpehhbin for each simulation
@@ -41,10 +41,10 @@ run_xpehhbin() {
 
     for pop2 in $(seq 1 $max_pop_id); do
         if [[ $pop2 -ne $pop1 ]]; then
-            hapA="hapbin/${sim_id}_0_${pop1}.hap"
-            hapB="hapbin/${sim_id}_0_${pop2}.hap"
-            map_file="hapbin/${sim_id}_0_${pop1}.map"
-            output_file="hapbin/sel.${sim_id}_${pop1}_vs_${pop2}.xpehh.out"
+            hapA="hapbin/${path}.${sim_id}_0_${pop1}.hap"
+            hapB="hapbin/${path}.${sim_id}_0_${pop2}.hap"
+            map_file="hapbin/${path}.${sim_id}_0_${pop1}.map"
+            output_file="hapbin/${path}.${sim_id}_${pop1}_vs_${pop2}.xpehh.out"
             command="/home/tx56/hapbin/build/xpehhbin --hapA $hapA --hapB $hapB --map $map_file --out $output_file"
             
             start_time=$(date +%s)
@@ -52,7 +52,7 @@ run_xpehhbin() {
             $command
             end_time=$(date +%s)
             runtime=$((end_time - start_time))
-            echo "Neut runtime for simulation ID $sim_id, 1vs$pop2: $runtime seconds" >> "hapbin/hapbin.runtime.txt"
+            echo "$path runtime for simulation ID $sim_id, 1vs$pop2: $runtime seconds" >> "hapbin/hapbin.runtime.txt"
         fi
     done
 }
@@ -64,7 +64,7 @@ while true; do
     for ((sim_id=0; sim_id<=simulation_number; sim_id++)); do
         all_files_exist=true
         for pop_id in "${pop_ids[@]}"; do
-            tped_file="${path}/sel.hap.${sim_id}_0_${pop_id}.tped"
+            tped_file="${path}/${path}.hap.${sim_id}_0_${pop_id}.tped"
             if [[ ! -f "$tped_file" ]]; then
                 all_files_exist=false
                 break
@@ -78,8 +78,8 @@ while true; do
                 # Check if all hap and map files are generated
                 all_files_generated=true
                 for pop_id in "${pop_ids[@]}"; do
-                    hap_file="hapbin/${sim_id}_0_${pop_id}.hap"
-                    map_file="hapbin/${sim_id}_0_${pop1}.map"
+                    hap_file="hapbin/${path}.${sim_id}_0_${pop_id}.hap"
+                    map_file="hapbin/${path}.${sim_id}_0_${pop1}.map"
                     if [[ ! -f "$hap_file" || ! -f "$map_file" ]]; then
                         all_files_generated=false
                         break
