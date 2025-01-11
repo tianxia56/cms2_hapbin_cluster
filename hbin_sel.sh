@@ -57,6 +57,16 @@ run_xpehhbin() {
     done
 }
 
+# Function to add pos and daf columns to xpehh.out files
+add_pos_and_daf() {
+    local sim_id=$1
+    local pop1=$2
+    local max_pop_id=$3
+    local path=$4
+
+    python3 add_xpehh_daf.py "$sim_id" "$pop1" "$max_pop_id" "$path"
+}
+
 # Monitor and process simulations
 processed_files=()
 while true; do
@@ -88,6 +98,7 @@ while true; do
                 
                 if $all_files_generated; then
                     run_xpehhbin "$sim_id" "$pop1" "$max_pop_id"
+                    add_pos_and_daf "$sim_id" "$pop1" "$max_pop_id" "$path"
                 else
                     echo "ERROR: Not all hap and map files were generated for simulation ID $sim_id."
                 fi
