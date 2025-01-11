@@ -1,0 +1,22 @@
+#hapbin notes
+
+--map
+chr rsid genpos pos
+
+#install hapbin
+module load CMake/3.29.3-GCCcore-13.3.0
+
+cd hapbin/build/
+
+cmake ../src/
+
+make
+
+#run hapbin
+
+/home/tx56/hapbin/build/ihsbin --hap hapbin/0_0_1.hap --map hapbin/0_0_1.map --out hapbin/sel.hap.0_0_1.ihs.ihs.out
+
+/home/tx56/hapbin/build/xpehhbin --hapA hapbin/0_0_1.hap --hapB hapbin/0_0_2.hap --map hapbin/0_0_1.map --out hapbin/sel.0_1_vs_2.xpehh.out
+
+
+/home/tx56/hapbin/build/xpehhbin --hapA hapbin/${sim_id}_0_${pop1}.hap --hapB hapbin/${sim_id}_0_${pop2}.hap --map hapbin/${sim_id}_0_${pop1}.map --out hapbin/sel.${sim_id}_${pop1}_vs_${pop2}.xpehh.out
