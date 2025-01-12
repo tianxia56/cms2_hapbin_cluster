@@ -19,4 +19,4 @@ update partition and runtime by editing ```zzz-update-runtime.py```
 
 install hapbin https://github.com/evotools/hapbin  to run xpehh as in ```hapbin.notes.txt```
 
-added upload final stats to gcloud
+added uploading final stats to gcloud
