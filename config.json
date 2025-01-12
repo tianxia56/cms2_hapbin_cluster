@@ -1,0 +1,7 @@
+{
+    "selected_simulation_number": 999,
+    "simulation_serial_number": 111,
+    "neutral_simulation_number": 999,
+    "demographic_model": "jv_gradient_101915_treebase_6_best.par",
+    "selective_sweep": "pop_event sweep_mult_standing \"sweep\" 1 U(0, 2000) E(20) .5 .05-.95 1 U(0, 2000)"
+}

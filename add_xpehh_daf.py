@@ -13,6 +13,9 @@ def add_id_pos_and_daf_column(sim_id, pop1, path):
     # Compute derived allele frequency (DAF) for pop1
     daf = pop_data.mean(axis=1)
     
+    # Ensure DAF is numeric
+    daf = pd.to_numeric(daf, errors='coerce')
+    
     # Create a results table using the IDs and positions from the TPED file
     results = pd.DataFrame({'ID': tped_data['ID'], 'pos': tped_data['pos'], 'daf': daf})
     
@@ -31,6 +34,9 @@ def inner_join_with_xpehh(sim_id, pop1, max_pop_id, path):
                 
                 # Rename columns to avoid spaces
                 xpehh_data.columns = ['ID', 'xpehh']
+                
+                # Ensure xpehh is numeric
+                xpehh_data['xpehh'] = pd.to_numeric(xpehh_data['xpehh'], errors='coerce')
                 
                 # Debugging: Check if 'ID' column exists in both DataFrames
                 if 'ID' not in xpehh_data.columns:
