@@ -22,7 +22,7 @@ run_selscan_ihs() {
     local base_name=$(basename $tped_file .tped)
     
     start_time=$(date +%s)
-    selscan --ihs --ihs-detail --tped $tped_file --out one_pop_stats/$base_name.ihs --threads 4
+    selscan --ihs --ihs-detail --tped $tped_file --out one_pop_stats/$base_name.ihs --threads 8
     end_time=$(date +%s)
     runtime=$((end_time - start_time))
     echo "ihs runtime for $base_name: $runtime seconds" >> one_pop_stats/runtime.txt
