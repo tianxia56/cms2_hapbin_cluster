@@ -25,6 +25,11 @@ wait_for_jobs() {
 
 # Record the start time of the entire process
 start_time_total=$(date +%s)
+##########################################################initial clean
+clean_job_id=$(sbatch --parsable clean.sh)
+
+# Wait for clean
+wait_for_jobs "$clean_job_id"
 
 job_ids=()
 ###########################################################################################
