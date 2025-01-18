@@ -10,6 +10,8 @@
 config_file="00config.json"
 demographic_model=$(python3 -c 'import json; print(json.load(open("'"$config_file"'"))["demographic_model"])')
 simulation_serial_number=$(python3 -c 'import json; print(json.load(open("'"$config_file"'"))["simulation_serial_number"])')
+upload_output=$(python3 -c 'import json; print(json.load(open("'"$config_file"'"))["upload_output"])')
+upload_command=$(python3 -c 'import json; print(json.load(open("'"$config_file"'"))["upload_command"])')
 
 # Call make-output.R
 Rscript 11output.R
@@ -17,5 +19,7 @@ Rscript 11output.R
 # Define the destination folder
 destination_folder="gs://fc-97de97ff-f4ee-414a-bf2d-a5f045b20a79/yale_cluster_sim_stats/${demographic_model%.par}"
 
-# Copy the files to the destination folder, ensuring the folder structure is created
-#/home/tx56/google-cloud-sdk/bin/gsutil cp output/${demographic_model}_batch${simulation_serial_number}_cms_stats_all_*.zip "$destination_folder/"
+# Check if upload_output is true and execute the upload command
+if [ "$upload_output" = "true" ]; then
+    eval $upload_command
+fi
