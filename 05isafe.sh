@@ -34,13 +34,13 @@ monitor_new_sim_ids() {
     local prev_row_count=0
     local processed_sim_ids=()
     while true; do
-        current_row_count=$(wc -l < runtime/cosi.sel.runtime.csv)
+        current_row_count=$(wc -l < runtime/nsl.sel.runtime.csv)
         if [ ${#processed_sim_ids[@]} -eq $((selected_simulation_number + 1)) ]; then
             echo "All required TPED files have been processed and saved in the one_pop_stats directory."
             break
         fi
         
-        new_sim_ids=$(tail -n +1 runtime/cosi.sel.runtime.csv | awk -F, 'NR > prev_row_count {print $2}' prev_row_count=$prev_row_count)
+        new_sim_ids=$(tail -n +1 runtime/nsl.sel.runtime.csv | awk -F, 'NR > prev_row_count {print $2}' prev_row_count=$prev_row_count)
         for sim_id in $new_sim_ids; do
             if [[ ! " ${processed_sim_ids[@]} " =~ " ${sim_id} " ]]; then
                 run_isafe $sim_id
@@ -54,8 +54,8 @@ monitor_new_sim_ids() {
 }
 
 # Wait for the CSV file to be created
-while [ ! -f runtime/cosi.sel.runtime.csv ]; do
-    echo "Waiting for runtime/cosi.sel.runtime.csv to be created..."
+while [ ! -f runtime/nsl.sel.runtime.csv ]; do
+    echo "Waiting for runtime/nsl.sel.runtime.csv to be created..."
     sleep 5
 done
 

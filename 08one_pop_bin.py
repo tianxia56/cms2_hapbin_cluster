@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np
 import sys
 
-# Get sim_id from command line arguments
-sim_id = int(sys.argv[1])
+# Get sim_ids from command line arguments
+sim_ids = list(map(int, sys.argv[1].split(',')))
 
 # Function to read and process nsl files
 def process_nsl(file_path):
@@ -49,17 +49,22 @@ ihs_data = pd.DataFrame()
 delihh_data = pd.DataFrame()
 ihh12_data = pd.DataFrame()
 
-# Process all files for sim_ids from 0 to sim_id
-for i in range(sim_id + 1):
-    nsl_file = f'one_pop_stats/neut.{i}.nsl.out'
-    ihs_file = f'one_pop_stats/neut.{i}_0_1.ihs.out'
-    ihh12_file = f'one_pop_stats/neut.{i}.ihh12.out'
+# Process files for all passed sim_ids and row bind them
+for sim_id in sim_ids:
+    nsl_file = f'one_pop_stats/neut.{sim_id}.nsl.out'
+    ihs_file = f'one_pop_stats/neut.{sim_id}_0_1.ihs.out'
+    ihh12_file = f'one_pop_stats/neut.{sim_id}.ihh12.out'
 
-    nsl_data = pd.concat([nsl_data, process_nsl(nsl_file)])
-    ihs_df, delihh_df = process_ihs(ihs_file)
-    ihs_data = pd.concat([ihs_data, ihs_df])
-    delihh_data = pd.concat([delihh_data, delihh_df])
-    ihh12_data = pd.concat([ihh12_data, process_ihh12(ihh12_file)])
+    if os.path.exists(nsl_file):
+        nsl_data = pd.concat([nsl_data, process_nsl(nsl_file)], ignore_index=True)
+    
+    if os.path.exists(ihs_file):
+        ihs_df, delihh_df = process_ihs(ihs_file)
+        ihs_data = pd.concat([ihs_data, ihs_df], ignore_index=True)
+        delihh_data = pd.concat([delihh_data, delihh_df], ignore_index=True)
+    
+    if os.path.exists(ihh12_file):
+        ihh12_data = pd.concat([ihh12_data, process_ihh12(ihh12_file)], ignore_index=True)
 
 # Drop rows with NaN values in the daf column
 nsl_data.dropna(subset=['daf'], inplace=True)
@@ -80,4 +85,4 @@ ihs_binned.to_csv(f'bin/ihs_bin.csv', index=False)
 delihh_binned.to_csv(f'bin/delihh_bin.csv', index=False)
 ihh12_binned.to_csv(f'bin/ihh12_bin.csv', index=False)
 
-print(f"Binned data saved to the 'bin' directory for sim_ids 0 to {sim_id}.")
+print(f"Binned data saved to the 'bin' directory for sim_ids {sim_ids}.")

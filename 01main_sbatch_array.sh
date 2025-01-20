@@ -64,24 +64,19 @@ job_ids+=($(sbatch --parsable 07ihs_sel.sh))
 job_ids+=($(sbatch --parsable 07ihs_neut.sh))
 
 ######################################################################################
+########################################################### Submit fst deldaf.sh task
+job_ids+=$(sbatch --parsable 09fst_deldaf.sh)
+
+######################################################################################
 ############################################## Wait for all initial jobs to complete
 wait_for_jobs "${job_ids[@]}"
 
-######################################################################################
-############################################## Check for missing sims
-
-#wait_for_jobs "${debug_ids[@]}"
 ######################################################################################
 ################# Submit task to normalize
 bin_job_id=$(sbatch --parsable 08make_bins.sh)
 
 # Wait for make_bin_fil
 wait_for_jobs "$bin_job_id"
-
-######################################################################################
-########################################################### Submit fst deldaf.sh task
-fst_job_id=$(sbatch --parsable --export=ALL,pop_ids="${pop_ids[*]}" 09fst_deldaf.sh)
-
 ######################################################################################
 ########################################################## Submit normalization jobs
 norm_jobs=()
@@ -89,8 +84,24 @@ norm_jobs+=($(sbatch --parsable 10norm_ihs.sh))
 norm_jobs+=($(sbatch --parsable 10norm_nsl.sh))
 norm_jobs+=($(sbatch --parsable 10norm_ihh12.sh))
 norm_jobs+=($(sbatch --parsable 10norm_delihh.sh))
-norm_jobs+=($(sbatch --parsable 10norm_xpehhbin.sh))
+# Call parallele xpehh norm
+# Read inputs from JSON file using Python
+# Call parallel xpehh norm
+# Read inputs from JSON file using Python
+config_file="00config.json"
+selected_simulation_number=$(python3 -c 'import json; print(json.load(open("'"$config_file"'"))["selected_simulation_number"])')
+demographic_model=$(python3 -c 'import json; print(json.load(open("'"$config_file"'"))["demographic_model"])')
+pop_ids=($(grep "^pop_define" $demographic_model | awk '{print $2}'))
+pop1=$(python3 -c 'import json; print(json.load(open("'"$config_file"'"))["selective_sweep"].split()[3])')
 
+# Generate all possible pairs of population IDs and deploy jobs
+for ((i=0; i<${#pop_ids[@]}; i++)); do
+    if [[ ${pop_ids[$i]} != $pop1 ]]; then
+        pop2=${pop_ids[$i]}
+        pair_id="${pop1}_vs_${pop2}"
+        norm_jobs+=($(sbatch --parsable 10norm_xpehhbin.sh $pair_id))
+    fi
+done
 #####################################################################################
 ######################################### Wait for all normalization jobs to complete
 wait_for_jobs "${norm_jobs[@]}"

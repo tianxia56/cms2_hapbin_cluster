@@ -25,13 +25,17 @@ run_selscan() {
     selscan --nsl --tped $tped_file --out one_pop_stats/$base_name --threads 4
     end_time=$(date +%s)
     runtime=$((end_time - start_time))
-    echo "sim_id,$sim_id,nsl_runtime,$runtime,seconds" >> runtime/nsl.${path}.runtime.csv
+    if [ -f "one_pop_stats/${base_name}.nsl.out" ]; then
+        echo "sim_id,$sim_id,nsl_runtime,$runtime,seconds" >> runtime/nsl.${path}.runtime.csv
+    fi
     
     start_time=$(date +%s)
     selscan --ihh12 --tped $tped_file --out one_pop_stats/$base_name --threads 4
     end_time=$(date +%s)
     runtime=$((end_time - start_time))
-    echo "sim_id,$sim_id,ihh12_runtime,$runtime,seconds" >> runtime/ihh12.${path}.runtime.csv
+    if [ -f "one_pop_stats/${base_name}.ihh12.out" ]; then
+        echo "sim_id,$sim_id,ihh12_runtime,$runtime,seconds" >> runtime/ihh12.${path}.runtime.csv
+    fi
 }
 
 # Function to monitor for new sim_ids and process them

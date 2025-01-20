@@ -49,33 +49,34 @@ os.makedirs('norm', exist_ok=True)
 
 # Check if the required arguments are provided
 if len(sys.argv) < 3:
-    print("Usage: python make_xpehh_bin.py <sim_id> <pair_ids>")
+    print("Usage: python make_xpehh_bin.py <sim_ids> <pair_ids>")
     sys.exit(1)
 
 # Read command-line arguments
-sim_id = sys.argv[1]
+sim_ids = list(map(int, sys.argv[1].split(',')))
 pair_ids = sys.argv[2].split(',')
 
 # Initialize lists to store combined data
 combined_xpehh = {pair_id: [] for pair_id in pair_ids}
 
-# Loop through each pair_id and extract data
-for pair_id in pair_ids:
-    xpehh_file_path = f'hapbin/neut.{sim_id}_{pair_id}.xpehh.out'
-    if not os.path.exists(xpehh_file_path):
-        print(f"File not found: {xpehh_file_path}")
-        continue
-    try:
-        xpehh_df = extract_columns(xpehh_file_path, [0, 1, 2])
-        combined_xpehh[pair_id].append(xpehh_df)
-    except IndexError as e:
-        print(f"Skipping xpehh file {xpehh_file_path} due to error: {e}")
-        continue
+# Loop through each sim_id and pair_id and extract data
+for sim_id in sim_ids:
+    for pair_id in pair_ids:
+        xpehh_file_path = f'hapbin/neut.{sim_id}_{pair_id}.xpehh.out'
+        if not os.path.exists(xpehh_file_path):
+            print(f"File not found: {xpehh_file_path}")
+            continue
+        try:
+            xpehh_df = extract_columns(xpehh_file_path, [0, 1, 2])
+            combined_xpehh[pair_id].append(xpehh_df)
+        except IndexError as e:
+            print(f"Skipping xpehh file {xpehh_file_path} due to error: {e}")
+            continue
 
 # Process and save xpehh data for each pair_id
 for pair_id in pair_ids:
     if combined_xpehh[pair_id]:
-        combined_xpehh_df = pd.concat(combined_xpehh[pair_id])
+        combined_xpehh_df = pd.concat(combined_xpehh[pair_id], ignore_index=True)
         bins_xpehh, means_xpehh, stds_xpehh = create_bins_and_stats(combined_xpehh_df.iloc[:, 2], combined_xpehh_df.iloc[:, 1])
         pd.DataFrame({'bin': bins_xpehh[:-1], 'mean': means_xpehh, 'std': stds_xpehh}).to_csv(f'bin/xpehh_{pair_id}_bin.csv', index=False)
 

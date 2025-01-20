@@ -24,7 +24,7 @@ collate_stats <- function(sim_id, demographic_model, simulation_serial_number) {
   
   # Read fst_deldaf file
   fst_deldaf_file <- paste0("two_pop_stats/", sim_id, "_fst_deldaf.tsv")
-  print(paste("Reading fst_deldaf file:", fst_deldaf_file))
+  #print(paste("Reading fst_deldaf file:", fst_deldaf_file))
   fst_deldaf_data <- read.table(fst_deldaf_file, header = TRUE)
   
   # Initialize output data with fst_deldaf data
@@ -32,7 +32,7 @@ collate_stats <- function(sim_id, demographic_model, simulation_serial_number) {
   
   # Read iSAFE file and merge
   isafe_file <- paste0("one_pop_stats/", sim_id, ".iSAFE.out")
-  print(paste("Reading iSAFE file:", isafe_file))
+  #print(paste("Reading iSAFE file:", isafe_file))
   isafe_data <- read.table(isafe_file, header = TRUE)
   colnames(isafe_data)[1] <- "pos"
   isafe_data$iSAFE <- signif(isafe_data$iSAFE, 4) # Round iSAFE to 4 significant figures
@@ -40,31 +40,31 @@ collate_stats <- function(sim_id, demographic_model, simulation_serial_number) {
   
   # Read norm_ihs file and merge
   norm_ihs_file <- paste0("norm/temp.ihs.", sim_id, ".tsv")
-  print(paste("Reading norm_ihs file:", norm_ihs_file))
+  #print(paste("Reading norm_ihs file:", norm_ihs_file))
   norm_ihs_data <- read.table(norm_ihs_file, header = TRUE)
   output_data <- merge(output_data, norm_ihs_data[, c("pos", "norm_ihs")], by = "pos", all = TRUE)
   
   # Read norm_nsl file and merge
   norm_nsl_file <- paste0("norm/temp.nsl.", sim_id, ".tsv")
-  print(paste("Reading norm_nsl file:", norm_nsl_file))
+  #print(paste("Reading norm_nsl file:", norm_nsl_file))
   norm_nsl_data <- read.table(norm_nsl_file, header = TRUE)
   output_data <- merge(output_data, norm_nsl_data[, c("pos", "norm_nsl")], by = "pos", all = TRUE)
   
   # Read norm_ihh12 file and merge
   norm_ihh12_file <- paste0("norm/temp.ihh12.", sim_id, ".tsv")
-  print(paste("Reading norm_ihh12 file:", norm_ihh12_file))
+  #print(paste("Reading norm_ihh12 file:", norm_ihh12_file))
   norm_ihh12_data <- read.table(norm_ihh12_file, header = TRUE)
   output_data <- merge(output_data, norm_ihh12_data[, c("pos", "norm_ihh12")], by = "pos", all = TRUE)
   
   # Read norm_delihh file and merge
   norm_delihh_file <- paste0("norm/temp.delihh.", sim_id, ".tsv")
-  print(paste("Reading norm_delihh file:", norm_delihh_file))
+  #print(paste("Reading norm_delihh file:", norm_delihh_file))
   norm_delihh_data <- read.table(norm_delihh_file, header = TRUE)
   output_data <- merge(output_data, norm_delihh_data[, c("pos", "norm_delihh")], by = "pos", all = TRUE)
   
   # Read norm_max_xpehh file and merge
   norm_max_xpehh_file <- paste0("norm/temp.max.xpehh.", sim_id, ".tsv")
-  print(paste("Reading norm_max_xpehh file:", norm_max_xpehh_file))
+  #print(paste("Reading norm_max_xpehh file:", norm_max_xpehh_file))
   norm_max_xpehh_data <- read.table(norm_max_xpehh_file, header = TRUE)
   output_data <- merge(output_data, norm_max_xpehh_data[, c("pos", "max_xpehh")], by = "pos", all = TRUE)
   

@@ -71,9 +71,9 @@ add_pos_and_daf() {
 processed_files=()
 while true; do
     # Check if the CSV file exists
-    if [[ -f runtime/cosi.${path}.runtime.csv ]]; then
+    if [[ -f runtime/nsl.${path}.runtime.csv ]]; then
         # Process each unique sim_id from the CSV file
-        new_sim_ids=$(awk -F, '{print $2}' runtime/cosi.${path}.runtime.csv)
+        new_sim_ids=$(awk -F, '{print $2}' runtime/nsl.${path}.runtime.csv)
         for sim_id in $new_sim_ids; do
             if [[ ! " ${processed_files[@]} " =~ " ${sim_id} " ]]; then
                 generate_map_and_haps "$sim_id" "$path"
@@ -89,7 +89,7 @@ while true; do
             break  # Exit the while loop
         fi
     else
-        echo "Waiting for runtime/cosi.sel.runtime.csv to be created..."
+        echo "Waiting for runtime/nsl.sel.runtime.csv to be created..."
     fi
 
     sleep 10  # Wait before checking for new files
