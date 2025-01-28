@@ -53,7 +53,7 @@ run_command() {
     # Run the command and record runtime
     while true; do
         start_time=\$(date +%s)
-        env COSI_NEWSIM=1 COSI_MAXATTEMPTS=1000000 coalescent -p ../\${demographic_model}-\${sim_id}.par -v -g --genmapRandomRegions --drop-singletons .25 --tped ../sel/sel.\${output_name} -n 1 -M -r 0 &
+        env COSI_SAVE_SAMPLED=../runtime/cosi.sel.4.csv COSI_NEWSIM=1 COSI_MAXATTEMPTS=1000000 coalescent -p ../\${demographic_model}-\${sim_id}.par -v -g --genmapRandomRegions --drop-singletons .25 --tped ../sel/sel.\${output_name} -n 1 -M -r 0 &
         local cmd_pid=\$!
 
         # Wait for the command to finish or timeout after 60 seconds
@@ -82,6 +82,7 @@ run_command() {
 
     # Record runtime
     echo "sim_id,\$sim_id,sel_runtime,\$runtime,seconds" >> ../runtime/cosi.sel.runtime.csv
+    echo "\$sim_id" >> ../runtime/cosi.sel.4.csv
 
     # Remove the copied .par file
     rm ../\${demographic_model}-\${sim_id}.par
