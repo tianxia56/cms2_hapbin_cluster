@@ -21,7 +21,7 @@ upload_command=$(echo "$upload_command_template" | sed "s/{demographic_model}/$d
 upload_output=$(echo "$upload_output" | tr '[:upper:]' '[:lower:]')
 
 # Call make-output.R
-python 11output.py
+python 11record.py
 
 # Check if upload_output is true and execute the upload command
 if [ "$upload_output" = "true" ]; then
