@@ -36,7 +36,7 @@ plt.close()
 # Create the second scatter plot with histograms
 plt.figure(figsize=(10, 6))
 scatter2 = sns.jointplot(x='sel_gen', y='daf', data=combined_data, kind='scatter', marginal_kws=dict(bins=50, fill=True))
-scatter2.set_axis_labels('Selected Ages by Generation', 'Derived Allele Frequency')
+scatter2.set_axis_labels('Generations under selection', 'Derived Allele Frequency')
 scatter2.ax_joint.set_xlim(0, 5000)
 plt.suptitle(f'{dynamic_name}', y=1.02)
 scatter2.savefig(f'output/{dynamic_name}_scatter_plot2.png')
