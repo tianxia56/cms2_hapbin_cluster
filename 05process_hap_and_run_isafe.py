@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import random
 import sys
+import json
 
 def is_numeric(value):
     try:
@@ -49,10 +50,15 @@ def add_extra_columns(hap_file, tped_file):
 
 def run_isafe(input_file, output_prefix):
     command = f"isafe --input {input_file} --output {output_prefix} --format hap"
-    subprocess.run(command, shell=True)
+    subprocess.run(command, shell=True, check=True)
 
 def main(sim_id):
-    tped_file_1 = f"sel/sel.hap.{sim_id}_0_1.tped"
+    # Load configuration
+    with open("00config.json", 'r') as config_file:
+        config = json.load(config_file)
+    pop1 = config["selective_sweep"].split()[3]
+
+    tped_file_1 = f"sel/sel.hap.{sim_id}_0_{pop1}.tped"
     
     if not os.path.exists(tped_file_1):
         print(f"Skipping {sim_id} as {tped_file_1} does not exist.")

@@ -29,7 +29,7 @@ def inner_join_with_ihs(sim_id, pop1, path):
     results['ID'] = results['ID'].astype(str)
     
     # Perform an inner join with the ihs.out file by ID
-    ihs_file = f"hapbin/{path}.hap.{sim_id}_0_{pop1}.ihs.out"
+    ihs_file = f"hapbin/{path}.hap.{sim_id}.ihs.out"
     print(f"Reading IHS file: {ihs_file}")
     if os.path.exists(ihs_file):
         ihs_data = pd.read_csv(ihs_file, sep='\\s+', header=None, usecols=[1, 2, 3, 4, 5, 6])

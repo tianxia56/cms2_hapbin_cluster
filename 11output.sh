@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=ycga
+#SBATCH --partition=week
 #SBATCH --time=2-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -24,6 +24,6 @@ upload_output=$(echo "$upload_output" | tr '[:upper:]' '[:lower:]')
 python 11record.py
 
 # Check if upload_output is true and execute the upload command
-if [ "$upload_output" = "true" ]; then
-    eval $upload_command
-fi
+#if [ "$upload_output" = "true" ]; then
+    #eval $upload_command
+#fi

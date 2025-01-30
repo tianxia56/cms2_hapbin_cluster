@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=ycga
+#SBATCH --partition=week
 #SBATCH --time=2-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -9,6 +9,7 @@
 # Read inputs from JSON file using Python
 config_file="00config.json"
 selected_simulation_number=$(python3 -c 'import json; print(json.load(open("'"$config_file"'"))["selected_simulation_number"])')
+pop1=$(python3 -c 'import json; print(json.load(open("'"$config_file"'"))["selective_sweep"].split()[3])')
 path="sel"
 
 # Create the one_pop_stats directory if it doesn't exist
@@ -18,7 +19,7 @@ mkdir -p runtime
 # Function to run selscan commands for a given TPED file
 run_selscan() {
     local sim_id=$1
-    local tped_file="${path}/${path}.hap.${sim_id}_0_1.tped"
+    local tped_file="${path}/${path}.hap.${sim_id}_0_${pop1}.tped"
     local base_name="${path}.${sim_id}"
     
     start_time=$(date +%s)

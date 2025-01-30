@@ -1,9 +1,9 @@
 {
-    "selected_simulation_number": 999,
-    "simulation_serial_number": 21,
-    "neutral_simulation_number": 999,
-    "demographic_model": "jv_default_112115_825am.par",
-    "selective_sweep": "pop_event sweep_mult_standing \"sweep\" 1 U(0, 3000) E(20) .5 .05-.95 1 U(0, 3000)",
+    "selected_simulation_number": 9,
+    "simulation_serial_number": 10053,
+    "neutral_simulation_number": 9,
+    "demographic_model": "gravel.par",
+    "selective_sweep": "pop_event sweep_mult_standing \"sweep\" 1 U(0, 5000) E(20) .5 .05-.95 1 U(0, 5000)",
     "upload_output": true,
     "upload_command_template": "/home/tx56/google-cloud-sdk/bin/gsutil cp output/{demographic_model}_batch{simulation_serial_number}_cms_stats_all_*.zip gs://fc-97de97ff-f4ee-414a-bf2d-a5f045b20a79/yale_cluster_sim_stats/{demographic_model_base}/"
 }
