@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=ycga
+#SBATCH --partition=week
 #SBATCH --time=2-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -24,7 +24,7 @@ run_ihsbin() {
 
     hap="hapbin/${path}.${sim_id}_0_${pop1}.hap"
     map_file="hapbin/${path}.${sim_id}_0_${pop1}.map"
-    output_file="hapbin/${path}.hap.${sim_id}_0_${pop1}.ihs.out"
+    output_file="hapbin/${path}.hap.${sim_id}.ihs.out"
     command="/home/tx56/hapbin/build/ihsbin --hap $hap --map $map_file --out $output_file"
     
     start_time=$(date +%s)

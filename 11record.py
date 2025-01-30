@@ -35,7 +35,6 @@ def collate_stats(sim_id, demographic_model, simulation_serial_number):
     # Read iSAFE file and merge
     isafe_file = f"one_pop_stats/{sim_id}.iSAFE.out"
     isafe_data = pd.read_csv(isafe_file, sep='\t')
-    print("iSAFE data columns:", isafe_data.columns)  # Debugging print
     isafe_data.rename(columns={'POS': 'pos'}, inplace=True)
     isafe_data['iSAFE'] = isafe_data['iSAFE'].round(4)  # Round iSAFE to 4 significant figures
     output_data = pd.merge(output_data, isafe_data[['pos', 'iSAFE']], on='pos', how='outer')
@@ -115,7 +114,6 @@ def process_cosi_sel_files():
             continue
         
         cosi_data = pd.read_csv(cosi_file, header=None, sep=' ')
-        print(f"cosi_data shape for {cosi_file}: {cosi_data.shape}")  # Debugging print
         
         if cosi_data.shape[1] != 9:
             print(f"Unexpected number of columns in {cosi_file}")
@@ -128,8 +126,8 @@ def process_cosi_sel_files():
         for idx, row in sweep_rows.iterrows():
             if idx + 1 < len(cosi_data) and cosi_data.iloc[idx + 1, 0].isdigit():
                 sim_id = int(cosi_data.iloc[idx + 1, 0])
-                deri_gen = row['param3']  # Corrected column index
-                sel_gen = row['param8']
+                deri_gen = int(round(float(row['param3'])))  # Corrected column index and rounded to integer
+                sel_gen = int(round(float(row['param8'])))
                 s = row['param4']
                 
                 # Append to par_inputs_file

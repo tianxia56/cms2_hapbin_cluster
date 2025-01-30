@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=ycga
+#SBATCH --partition=week
 #SBATCH --time=2-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -29,8 +29,8 @@ for ((i=0; i<${#pop_ids[@]}; i++)); do
         pop2=${pop_ids[$i]}
         pair_ids="${pop1}_vs_${pop2}"
 
-        # Pass all sim_ids at once
-        python3 08one_pop_bin.py "$sim_ids_combined"
+        # Pass all sim_ids and pop1 to the Python scripts
+        python3 08one_pop_bin.py "$sim_ids_combined" "$pop1"
         python3 08xpehh_bin.py "$sim_ids_combined" "$pair_ids"
     fi
 done

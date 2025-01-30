@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=ycga
+#SBATCH --partition=week
 #SBATCH --time=2-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -76,6 +76,7 @@ run_command() {
 
     # Record runtime
     echo "sim_id,\$sim_id,neut_runtime,\$runtime,seconds" >> ../runtime/cosi.neut.runtime.csv
+
 }
 
 # Loop to run the command for each output name in the specified range

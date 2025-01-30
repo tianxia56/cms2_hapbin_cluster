@@ -1,7 +1,8 @@
 args <- commandArgs(trailingOnly = TRUE)
 sim_id <- as.integer(args[1])
+pop1 <- as.integer(args[2])
 
-input_file <- paste0("one_pop_stats/sel.", sim_id, "_0_1.ihs.out")
+input_file <- paste0("one_pop_stats/sel.", sim_id, "_0_", pop1, ".ihs.out")
 output_file <- paste0("norm/temp.ihs.", sim_id, ".tsv")
 
 # Read the input file, skipping the header row

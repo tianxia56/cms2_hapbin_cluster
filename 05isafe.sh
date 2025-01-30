@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=ycga
+#SBATCH --partition=week
 #SBATCH --time=2-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -9,6 +9,7 @@
 # Read inputs from JSON file using Python
 config_file="00config.json"
 selected_simulation_number=$(python3 -c "import json; print(json.load(open('$config_file'))['selected_simulation_number'])")
+pop1=$(python3 -c 'import json; print(json.load(open("'"$config_file"'"))["selective_sweep"].split()[3])')
 
 # Debugging output
 echo "Selected Simulation Number: $selected_simulation_number"
@@ -20,7 +21,7 @@ mkdir -p runtime
 # Function to run process_hap_and_run_isafe.py for a given simulation ID
 run_isafe() {
     local sim_id=$1
-    local tped_file="sel/sel.hap.${sim_id}_0_1.tped"
+    local tped_file="sel/sel.hap.${sim_id}_0_${pop1}.tped"
     echo "Processing $tped_file"
     start_time=$(date +%s)
     python 05process_hap_and_run_isafe.py "$sim_id"

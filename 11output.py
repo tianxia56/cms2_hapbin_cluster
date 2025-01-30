@@ -115,6 +115,7 @@ with zipfile.ZipFile(zipfile_name, 'w', compression=zipfile.ZIP_DEFLATED) as zip
 print("Zip file created successfully")
 
 # Remove the individual tsv files after making the zip
-print("Removing individual tsv files")
-for file in files_to_zip:
-    os.remove(file)
+#print("Removing individual tsv files")
+#for file in files_to_zip:
+    #os.remove(file)
+

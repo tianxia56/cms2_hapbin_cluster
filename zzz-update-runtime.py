@@ -14,8 +14,8 @@ for filename in os.listdir(directory):
         # Replace the specific line if it exists
         new_content = []
         for line in content:
-            if line.strip() == '#SBATCH --partition=week':
-                new_content.append('#SBATCH --partition=ycga\n')
+            if line.strip() == '#SBATCH --partition=ycga':
+                new_content.append('#SBATCH --partition=week\n')
             else:
                 new_content.append(line)
         

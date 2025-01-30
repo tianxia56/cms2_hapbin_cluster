@@ -3,8 +3,9 @@ import pandas as pd
 import numpy as np
 import sys
 
-# Get sim_ids from command line arguments
+# Get sim_ids and pop1 from command line arguments
 sim_ids = list(map(int, sys.argv[1].split(',')))
+pop1 = sys.argv[2]
 
 # Function to read and process nsl files
 def process_nsl(file_path):
@@ -52,7 +53,7 @@ ihh12_data = pd.DataFrame()
 # Process files for all passed sim_ids and row bind them
 for sim_id in sim_ids:
     nsl_file = f'one_pop_stats/neut.{sim_id}.nsl.out'
-    ihs_file = f'one_pop_stats/neut.{sim_id}_0_1.ihs.out'
+    ihs_file = f'one_pop_stats/neut.{sim_id}_0_{pop1}.ihs.out'
     ihh12_file = f'one_pop_stats/neut.{sim_id}.ihh12.out'
 
     if os.path.exists(nsl_file):

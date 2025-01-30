@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=ycga
+#SBATCH --partition=week
 #SBATCH --time=2-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -30,7 +30,7 @@ generate_map_and_haps() {
     done
     end_time=$(date +%s)
     runtime=$((end_time - start_time))
-    echo "sim_id,$sim_id,${path}_runtime_map_and_hap,xpehh_1vs$pop2,$runtime,seconds" >> "runtime/xpehh.${path}.map.runtime.csv"
+    echo "sim_id,$sim_id,${path}_runtime_map_and_hap,xpehh_pop1vs$pop2,$runtime,seconds" >> "runtime/xpehh.${path}.map.runtime.csv"
 }
 
 # Function to run xpehhbin for each simulation
