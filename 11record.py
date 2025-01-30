@@ -101,7 +101,6 @@ def save_pos_sel_rows_to_tsv(sim_id, demographic_model, simulation_serial_number
         pos_sel_rows_data.to_csv(output_file, sep='\t', index=False, na_rep='NA')
     else:
         pos_sel_rows_data.to_csv(output_file, mode='a', header=False, index=False, sep='\t')
-
 # Function to process cosi.sel.*.csv files and round up the numbers
 def process_cosi_sel_files():
     current_date = datetime.now().strftime("%Y-%m-%d")
@@ -159,6 +158,44 @@ for sim_id in sim_ids:
 
 # Process cosi.sel.*.csv files
 process_cosi_sel_files()
+
+# Append additional parameters to the final TSV files
+def append_additional_parameters():
+    current_date = datetime.now().strftime("%Y-%m-%d")
+    par_inputs_file = f"{output_dir}/{demographic_model}_batch{simulation_serial_number}_par_inputs_{current_date}.tsv"
+    
+    if not os.path.exists(par_inputs_file):
+        print(f"File not found: {par_inputs_file}")
+        return
+    
+    par_inputs_data = pd.read_csv(par_inputs_file, sep='\t')
+    
+    for sim_id in sim_ids:
+        output_file = f"{output_dir}/{demographic_model}_batch{simulation_serial_number}_cms_stats_{sim_id}.tsv"
+        if not os.path.exists(output_file):
+            print(f"File not found: {output_file}")
+            continue
+        
+        output_data = pd.read_csv(output_file, sep='\t')
+        
+        if 'sim_id' not in output_data.columns:
+            print(f"'sim_id' column not found in file: {output_file}")
+            continue
+        
+        additional_params = par_inputs_data[par_inputs_data['sim_id'] == sim_id][['deri_gen', 'sel_gen', 's']]
+        if additional_params.empty:
+            print(f"No additional parameters found for sim_id={sim_id}")
+            continue
+        
+        additional_params = additional_params.iloc[0]
+        output_data['deri_gen'] = additional_params['deri_gen']
+        output_data['sel_gen'] = additional_params['sel_gen']
+        output_data['s'] = f"{additional_params['s']:.2e}"  # Format s in scientific notation with 2 significant figures
+        
+        output_data.to_csv(output_file, sep='\t', index=False, na_rep='NA')
+
+# Append additional parameters to the final TSV files
+append_additional_parameters()
 
 # Zip all the output files into one single tsv zip with the current date in the name using higher compression rate
 current_date = datetime.now().strftime("%Y-%m-%d")
