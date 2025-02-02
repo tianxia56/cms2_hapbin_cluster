@@ -64,7 +64,7 @@ def collate_stats(sim_id, demographic_model, simulation_serial_number):
     norm_max_xpehh_data = pd.read_csv(norm_max_xpehh_file, sep='\t')
     output_data = pd.merge(output_data, norm_max_xpehh_data[['pos', 'max_xpehh']], on='pos', how='outer')
     
-    # Add sim_id and sim_batch_no as the first columns
+    # Add sim_batch_no and sim_id as the first columns
     output_data['sim_batch_no'] = simulation_serial_number
     output_data['sim_id'] = sim_id
     cols = ['sim_batch_no', 'sim_id'] + [col for col in output_data.columns if col not in ['sim_batch_no', 'sim_id']]
@@ -101,6 +101,7 @@ def save_pos_sel_rows_to_tsv(sim_id, demographic_model, simulation_serial_number
         pos_sel_rows_data.to_csv(output_file, sep='\t', index=False, na_rep='NA')
     else:
         pos_sel_rows_data.to_csv(output_file, mode='a', header=False, index=False, sep='\t')
+
 # Function to process cosi.sel.*.csv files and round up the numbers
 def process_cosi_sel_files():
     current_date = datetime.now().strftime("%Y-%m-%d")
@@ -128,15 +129,15 @@ def process_cosi_sel_files():
                 deri_gen = int(round(float(row['param3'])))  # Corrected column index and rounded to integer
                 sel_gen = int(round(float(row['param8'])))
                 s = row['param4']
+                selpos = row['param5']  # Read selpos from the column to the right of s
                 
                 # Append to par_inputs_file
                 if os.path.exists(par_inputs_file):
                     par_inputs_data = pd.read_csv(par_inputs_file, sep='\t')
-                    par_inputs_data.loc[par_inputs_data['sim_id'] == sim_id, ['deri_gen', 'sel_gen', 's']] = [deri_gen, sel_gen, s]
+                    par_inputs_data.loc[par_inputs_data['sim_id'] == sim_id, ['deri_gen', 'sel_gen', 's', 'selpos']] = [deri_gen, sel_gen, s, selpos]
                     par_inputs_data.to_csv(par_inputs_file, sep='\t', index=False, na_rep='NA')
                 else:
                     print(f"File not found: {par_inputs_file}")
-
 # Loop through simulations and populations
 for sim_id in sim_ids:
     with open(demographic_model, 'r') as f:
@@ -178,19 +179,27 @@ def append_additional_parameters():
         
         output_data = pd.read_csv(output_file, sep='\t')
         
+        # Initialize all columns with numeric value 0
+        output_data.loc[:, 'deri_gen'] = 0
+        output_data.loc[:, 'sel_gen'] = 0
+        output_data.loc[:, 's'] = 0
+        output_data.loc[:, 'selpos'] = 0
+        
+        # Update the row with pos_sel_rows
         if 'sim_id' not in output_data.columns:
             print(f"'sim_id' column not found in file: {output_file}")
             continue
         
-        additional_params = par_inputs_data[par_inputs_data['sim_id'] == sim_id][['deri_gen', 'sel_gen', 's']]
+        additional_params = par_inputs_data[par_inputs_data['sim_id'] == sim_id][['deri_gen', 'sel_gen', 's', 'selpos']]
         if additional_params.empty:
             print(f"No additional parameters found for sim_id={sim_id}")
             continue
         
         additional_params = additional_params.iloc[0]
-        output_data['deri_gen'] = additional_params['deri_gen']
-        output_data['sel_gen'] = additional_params['sel_gen']
-        output_data['s'] = f"{additional_params['s']:.2e}"  # Format s in scientific notation with 2 significant figures
+        output_data.loc[output_data['pos'] == pos_sel_rows, 'deri_gen'] = additional_params['deri_gen']
+        output_data.loc[output_data['pos'] == pos_sel_rows, 'sel_gen'] = additional_params['sel_gen']
+        output_data.loc[output_data['pos'] == pos_sel_rows, 's'] = f"{additional_params['s']:.4e}"  # Format s in scientific notation with 4 significant figures
+        output_data.loc[output_data['pos'] == pos_sel_rows, 'selpos'] = 1  # Set selpos to 1
         
         output_data.to_csv(output_file, sep='\t', index=False, na_rep='NA')
 
